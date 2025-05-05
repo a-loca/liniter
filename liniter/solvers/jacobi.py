@@ -1,6 +1,7 @@
 from .base import IterativeSolver
 import numpy as np
 from liniter.utils import relative_residual
+from liniter.utils import is_diagonally_dominant
 
 
 class JacobiSolver(IterativeSolver):
@@ -12,7 +13,9 @@ class JacobiSolver(IterativeSolver):
             raise ValueError(
                 "Matrix A has at least one zero on the diagonal. Jacobi failed."
             )
-        # TODO: check if A is diagonally dominant
+        # Check if matrix is diagonally dominant
+        if not is_diagonally_dominant(self.A):
+            print("WARNING: matrix is not diagonally dominant, Jacobi may fail.")
 
     def _solve(self):
         # Initializing solution vector
