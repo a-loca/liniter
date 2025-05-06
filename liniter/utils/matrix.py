@@ -11,3 +11,6 @@ def is_diagonally_dominant(A):
         return True
     else:
         return False
+
+def is_diagonal_non_zero(A):
+    return np.all(A.diagonal() != 0)

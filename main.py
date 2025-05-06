@@ -13,3 +13,8 @@ sol = solver.solve()
 
 print(sol)
 print(relative_error(x, sol))
+
+# print(A)
+# print(b)
+# print(A @ b)
+# print(np.dot(A, b))

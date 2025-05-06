@@ -1,7 +1,7 @@
 from .base import IterativeSolver
 import numpy as np
 from liniter.utils import relative_residual
-from liniter.utils import is_diagonally_dominant
+from liniter.utils import is_diagonally_dominant, is_diagonal_non_zero
 
 
 class JacobiSolver(IterativeSolver):
@@ -9,7 +9,7 @@ class JacobiSolver(IterativeSolver):
     def _check_matrix(self):
         super()._check_matrix()
         # Check if diagonal has no null elements
-        if np.any(self.A.diagonal() == 0):
+        if not is_diagonal_non_zero(self.A):
             raise ValueError(
                 "Matrix A has at least one zero on the diagonal. Jacobi failed."
             )
