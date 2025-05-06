@@ -29,18 +29,17 @@ class JacobiSolver(IterativeSolver):
         # Upper + lower triangular matrices from A
         LU = np.diag(A_diag) - self.A
 
-        # Iterating until convergence
-        while relative_residual(self.A, x, self.b) > self.tol:
-            # Computing new solution
-            x = D_inv @ (LU @ x + self.b)
-            k += 1
-
-            # Checking number of iterations
-            if k > self.max_iter:
-                print(
-                    f"Jacobi could not reach convergence after {k} iterations, ending execution."
-                )
+        for k in range(self.max_iter):
+            # If residual is lower than tollerance, then loop can end early
+            if relative_residual(self.A, x, self.b) <= self.tol:
+                print(f"Jacobi reached convergence after {k} iterations!")
                 return x
 
-        print(f"Jacobi reached convergence after {k} iterations!")
+            # Computing new solution
+            x = D_inv @ (LU @ x + self.b)
+
+        # Max number of iteration was reached without convergence
+        print(
+            f"Jacobi could not reach convergence after {self.max_iter} iterations, ending execution."
+        )
         return x
