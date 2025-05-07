@@ -1,13 +1,11 @@
 from abc import ABC, abstractmethod
 
 
-class IterativeSolver(ABC):
+class Solver(ABC):
 
-    def __init__(self, A, b, max_iter=20000, tol=1e-5):
+    def __init__(self, A, b):
         self.A = A
         self.b = b
-        self.max_iter = max_iter
-        self.tol = tol
 
     def _check_matrix(self):
         # Check is matrix is square
@@ -27,3 +25,15 @@ class IterativeSolver(ABC):
     def solve(self):
         self._check_matrix()
         return self._solve()
+
+
+class IterativeSolver(Solver):
+
+    def __init__(self, A, b, max_iter=20000, tol=1e-5):
+        self.max_iter = max_iter
+        self.tol = tol
+        super().__init__(A, b)
+
+    @abstractmethod
+    def _solve(self):
+        pass

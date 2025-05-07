@@ -1,5 +1,10 @@
-from base import IterativeSolver
-from utils import is_diagonally_dominant, relative_residual, is_diagonal_non_zero
+from .base import IterativeSolver
+from ..utils import (
+    is_diagonally_dominant,
+    relative_residual,
+    is_diagonal_non_zero,
+)
+from .lower_triangular import LowerTriangularSolver
 import numpy as np
 
 
@@ -21,7 +26,7 @@ class GaussSeidelSolver(IterativeSolver):
         x = np.zeros(self.A.shape[0])
         k = 0
 
-        # Getting lower triangular matrix
+        # Getting lower triangular matrix and diagonal
         L = np.tril(self.A)
 
         # Getting upper triangular matrix
@@ -34,8 +39,9 @@ class GaussSeidelSolver(IterativeSolver):
                 return x
 
             # Computing new solution
-            # solver = LowerTriangularSolver(L, U @ x + b)
-            # x = solver.solve()
+            # L x_k+1 = b - U x_k
+            solver = LowerTriangularSolver(L, self.b - U @ x)
+            x = solver.solve()
 
         # Max number of iteration was reached without convergence
         print(

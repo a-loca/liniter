@@ -1,7 +1,7 @@
 from .base import IterativeSolver
 import numpy as np
-from liniter.utils import relative_residual
-from liniter.utils import is_diagonally_dominant, is_diagonal_non_zero
+from ..utils import relative_residual
+from ..utils import is_diagonally_dominant, is_diagonal_non_zero
 
 
 class JacobiSolver(IterativeSolver):
@@ -27,6 +27,7 @@ class JacobiSolver(IterativeSolver):
         D_inv = np.diag(1 / A_diag)
 
         # Upper + lower triangular matrices from A
+        # This is - (L + U)
         LU = np.diag(A_diag) - self.A
 
         for k in range(self.max_iter):
@@ -36,6 +37,7 @@ class JacobiSolver(IterativeSolver):
                 return x
 
             # Computing new solution
+            # D x_k+1 = -(L+U) x_k +b
             x = D_inv @ (LU @ x + self.b)
 
         # Max number of iteration was reached without convergence
