@@ -1,7 +1,6 @@
 from liniter.solvers import JacobiSolver
-from liniter.utils import relative_error
+from liniter.utils import relative_error, is_triangular, is_symmetric
 import numpy as np
-from liniter.utils import is_triangular
 
 from liniter.solvers import LowerTriangularSolver, GaussSeidelSolver
 
@@ -13,13 +12,17 @@ from liniter.solvers import LowerTriangularSolver, GaussSeidelSolver
 # b = A.dot(x)
 
 
-A = np.array([[10, 2, 1], [1, 8, 1], [2, 1, 9]])
-x = np.array([1.0, 2.0, 3.0])
-b = A @ x
+# A = np.array([[10, 2, 1], [1, 8, 1], [2, 1, 9]])
+# x = np.array([1.0, 2.0, 3.0])
+# b = A @ x
 
 
-solver = GaussSeidelSolver(A, b)
-sol = solver.solve()
+# solver = GaussSeidelSolver(A, b)
+# sol = solver.solve()
 
-print(sol)
-print(relative_error(x, sol))
+# print(sol)
+# print(relative_error(x, sol))
+
+A = np.array([[4, 2, -1], [2, 3, 0], [-1, 0, 2]])
+
+print(np.all(np.linalg.eigvals(A) > 0))

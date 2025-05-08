@@ -26,3 +26,14 @@ def is_triangular(A, lower=True):
         return np.allclose(A, np.tril(A))
     else:
         return np.allclose(A, np.triu(A))
+
+
+def is_symmetric(A):
+    # Check if A and A transposed are equal within tollerance
+    return np.allclose(A, A.T)
+
+
+def is_positive_definite(A):
+    # Matrix is positive-definite if symmetric
+    # and all its eigenvalues are positive
+    return is_symmetric(A) and np.all(np.linalg.eigvals(A) > 0)
