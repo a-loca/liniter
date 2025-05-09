@@ -33,7 +33,7 @@ class JacobiSolver(IterativeSolver):
         for k in range(self.max_iter):
             # If residual is lower than tollerance, then loop can end early
             if relative_residual(self.A, x, self.b) <= self.tol:
-                print(f"Jacobi reached convergence after {k} iterations!")
+                print(f"Jacobi reached convergence after {k+1} iterations!")
                 return x
 
             # Computing new solution

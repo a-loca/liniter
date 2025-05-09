@@ -1,5 +1,6 @@
-from base import IterativeSolver
-from liniter.utils import is_symmetric, is_positive_definite
+from .base import IterativeSolver
+from ..utils import is_symmetric, is_positive_definite, relative_residual
+import numpy as np
 
 
 class GradientSolver(IterativeSolver):
@@ -15,4 +16,26 @@ class GradientSolver(IterativeSolver):
             )
 
     def _solve(self):
-        return
+        x = np.zeros(self.A.shape[0])
+        for k in range(0, self.max_iter):
+            # Finding residual
+            r = self.b - self.A @ x
+
+            # Checking if error is below threshold
+            if np.linalg.norm(r) / np.linalg.norm(self.b) <= self.tol:
+                # Method has converged, return solution
+                print(f"Gradient reached convergence after {k+1} iterations!")
+                return x
+
+            # Computing learning rate
+            step = (r.T @ r) / (r.T @ self.A @ r)
+
+            # Computing step in the direction of -gradient
+            # to minimize error function
+            x = x + step * r
+
+        # Method has not converged since for loop has ended
+        print(
+            f"Gradient could not reach convergence after {self.max_iter} iterations, ending execution."
+        )
+        return x
