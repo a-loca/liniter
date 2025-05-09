@@ -19,7 +19,7 @@ print(is_symmetric(A))
 
 
 # solver = GaussSeidelSolver(A, b)
-solver = solvers.GradientSolver(A, b, max_iter=20)
+solver = solvers.GradientSolver(A, b)
 sol = solver.solve()
 
 print(sol)

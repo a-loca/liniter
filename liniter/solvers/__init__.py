@@ -6,4 +6,4 @@ from .lower_triangular import LowerTriangularSolver
 
 from .gradient import GradientSolver
 
-# from .conjugate_gradient import ConjugateGradientSolver
+from .conjugate_gradient import ConjugateGradientSolver

@@ -28,11 +28,11 @@ class GradientSolver(IterativeSolver):
                 return x
 
             # Computing learning rate
-            step = (r.T @ r) / (r.T @ self.A @ r)
+            alpha = (r.T @ r) / (r.T @ self.A @ r)
 
             # Computing step in the direction of -gradient
             # to minimize error function
-            x = x + step * r
+            x = x + alpha * r
 
         # Method has not converged since for loop has ended
         print(
