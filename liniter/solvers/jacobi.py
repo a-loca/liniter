@@ -1,7 +1,6 @@
 from .base import IterativeSolver
 import numpy as np
-from ..utils import relative_residual
-from ..utils import is_diagonally_dominant, is_diagonal_non_zero
+from ..utils import relative_residual, is_diagonally_dominant, is_diagonal_non_zero
 
 
 class JacobiSolver(IterativeSolver):
