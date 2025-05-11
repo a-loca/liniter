@@ -1,5 +1,6 @@
 from .base import IterativeSolver
 import numpy as np
+from scipy.sparse import diags
 from ..utils import relative_residual, is_diagonally_dominant, is_diagonal_non_zero
 
 
@@ -21,13 +22,15 @@ class JacobiSolver(IterativeSolver):
         x = np.zeros(self.A.shape[0])
         k = 0
 
-        # Getting diagonal from A and creating a matrix
-        A_diag = np.diag(self.A)
-        D_inv = np.diag(1 / A_diag)
+        # Getting diagonal from A
+        A_diag = self.A.diagonal()
+        
+        # Creating sparse inverse diagonal matrix
+        D_inv = diags(1 / A_diag)
 
         # Upper + lower triangular matrices from A
         # This is - (L + U)
-        LU = np.diag(A_diag) - self.A
+        LU = diags(A_diag) - self.A
 
         for k in range(self.max_iter):
             # If residual is lower than tollerance, then loop can end early

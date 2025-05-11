@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from ..utils import is_square, is_vector_compatible
 
 
 class Solver(ABC):
@@ -9,13 +10,9 @@ class Solver(ABC):
 
     def _check_matrix(self):
         # Check is matrix is square
-        n_rows = self.A.shape[0]
-        n_cols = self.A.shape[1]
-        n = self.b.shape[0]
-
-        if n_rows != n_cols:
+        if not is_square(self.A):
             raise ValueError("Matrix A needs to be square.")
-        if n_rows != n:
+        if not is_vector_compatible(self.A, self.b):
             raise ValueError("Vector b does not match the size of the matrix A.")
 
     @abstractmethod

@@ -4,10 +4,13 @@ import numpy as np
 import scipy.sparse as sp
 
 
-# A = np.array([[2, -1, 0], [-1, 3, -1], [0, -1, 4]])
+# A = np.array([[1, -1, 0], [-1, 3, -1], [0, -1, 4]])
+A = utils.load_custom_mtx("test_data/spa1.mtx")
+# A = sp.tril(A)
 # x = np.array([1, 2, 3])
+x = np.ones(1000)
 
-# b = A.dot(x)
+b = A.dot(x)
 
 # print(A)
 # print(is_symmetric(A))
@@ -25,16 +28,17 @@ import scipy.sparse as sp
 # print(relative_error(x, sol))
 
 
-A = utils.load_custom_mtx("test_data/spa1.mtx")
+# A = sp.csr_matrix(A)
 
-# print(np.all(A.diagonal() != 0))
-# print(utils.is_triangular(sp.tril(A)))
-# print((A != A.transpose()).nnz == 0)
-# print(utils.is_symmetric(A))
-# print(sp.linalg.eigs(A))
+# print(A.toarray())
 
-# print(np.abs(A))
+# print(A)
 
-# print(np.abs(A).diagonal())
+# print(A.indices)
+# print(A.indptr)
 
-print(utils.is_diagonally_dominant(A))
+# print(A.data)
+
+solver = solvers.GaussSeidelSolver(A, b)
+sol = solver.solve()
+print(utils.relative_error(x_exact=x, x_approx=sol))

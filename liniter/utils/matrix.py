@@ -1,6 +1,35 @@
 import numpy as np
 import scipy.sparse as sp
 
+
+def is_square(A):
+    return A.shape[0] == A.shape[1]
+
+
+def is_vector_compatible(A, b):
+    return A.shape[0] == b.shape[0]
+
+
+def is_symmetric(A, rtol=1e-5, atol=1e-8):
+    # Check if A and A transposed are equal
+    diff = A - A.transpose()
+
+    # != operator does not take into account a tollerance
+    # so it could return False for very small values
+    # for this reason, we convert to COO format and also
+    # perform a check with tollerances
+    diff_coo = diff.tocoo()
+    # diff_coo.data is a numpy array
+    # absolute(a - b) <= (atol + rtol * absolute(b))
+    return np.allclose(diff_coo.data, 0, rtol=rtol, atol=atol)
+
+
+def is_triangular(A, lower=True, rtol=1e-5, atol=1e-8):
+    diff = A - sp.tril(A) if lower else sp.triu(A)
+    diff_coo = diff.tocoo()
+    return np.allclose(diff_coo.data, 0, rtol=rtol, atol=atol)
+
+
 def is_diagonally_dominant(A):
     # Absolute values of A
     abs_A = abs(A)
@@ -16,30 +45,9 @@ def is_diagonally_dominant(A):
     return np.all(D > S)
 
 
-def is_diagonal_non_zero(A):
-    return np.all(A.diagonal() != 0)
-
-
-def is_triangular(A, lower=True):
-    if lower:
-        return (A != sp.tril(A)).nnz == 0
-    else:
-        return (A != sp.triu(A)).nnz == 0
-
-
-def is_symmetric(A, rtol=1e-5, atol=1e-8):
-    # Check if A and A transposed are equal
-    diff = A - A.transpose()
-    if diff.nnz == 0:
-        return True
-    else:
-        # != operator does not take into account a tollerance
-        # so it could return False for very small values
-        # for this reason, we convert to COO format and also
-        # perform a check with tollerances
-        diff_coo = diff.tocoo()
-        # diff_coo.data is a numpy array
-        return np.allclose(diff_coo.data, 0, rtol=rtol, atol=atol)
+def is_diagonal_non_zero(A, rtol=1e-5, atol=1e-8):
+    # Check if diagonal vector and zero vector are equal within tollerance
+    return np.all(~np.isclose(A.diagonal(), 0, rtol=rtol, atol=atol))
 
 
 def is_positive_definite(A):

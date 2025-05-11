@@ -13,13 +13,13 @@ def main():
         help="Path to the '.mtx' file containing the matrix to be solved",
     )
     parser.add_argument(
-        "tol",
+        "-tol",
         help="Tollerance for the iterative solvers. Default is 1e-4",
         type=float,
         default=1e-4,
     )
     parser.add_argument(
-        "max_iter",
+        "-max_iter",
         help="Maximum number of iterations for the iterative solvers. Default is 20000",
         type=int,
         default=20000,
@@ -66,10 +66,10 @@ def main():
         args.all = False
 
     # Load the matrix A from the provided file
-    A = utils.load_mtx(args.A)
+    A = utils.load_custom_mtx(args.A)
 
     # Create solution vector x
-    x = np.ones(A)
+    x = np.ones(A.shape[0])
 
     # Create vector b
     b = A @ x
@@ -98,7 +98,6 @@ def main():
         print("===================================================")
         print(f"Running {solver.__class__.__name__}...")
         sol = solver.solve()
-        print(f"Solution: {sol}")
         print(f"Error: {utils.relative_error(x_exact=x, x_approx=sol)}")
 
 

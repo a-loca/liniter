@@ -6,6 +6,7 @@ from ..utils import (
 )
 from .lower_triangular import LowerTriangularSolver
 import numpy as np
+from scipy.sparse import tril
 
 
 class GaussSeidelSolver(IterativeSolver):
@@ -27,7 +28,7 @@ class GaussSeidelSolver(IterativeSolver):
         k = 0
 
         # Getting lower triangular matrix and diagonal
-        L = np.tril(self.A)
+        L = tril(self.A, format="csr")
 
         # Getting upper triangular matrix
         U = self.A - L
