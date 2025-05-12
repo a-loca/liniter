@@ -3,6 +3,9 @@ from ..utils import (
     is_diagonally_dominant,
     relative_residual,
     is_diagonal_non_zero,
+    error_message,
+    warning_message,
+    success_message,
 )
 from .lower_triangular import LowerTriangularSolver
 import numpy as np
@@ -15,11 +18,17 @@ class GaussSeidelSolver(IterativeSolver):
         # Check if diagonal has no null elements
         if not is_diagonal_non_zero(self.A):
             raise ValueError(
-                "Matrix A has at least one zero on the diagonal. Gauss-Seidel failed."
+                error_message(
+                    "Matrix A has at least one zero on the diagonal. Gauss-Seidel failed."
+                )
             )
         # Check if matrix is diagonally dominant
         if not is_diagonally_dominant(self.A):
-            print("WARNING: matrix is not diagonally dominant, Gauss-Seidel may fail.")
+            print(
+                warning_message(
+                    "WARNING: matrix is not diagonally dominant, Gauss-Seidel may fail."
+                )
+            )
 
     def _solve(self):
 
@@ -36,13 +45,17 @@ class GaussSeidelSolver(IterativeSolver):
         for k in range(self.max_iter):
             # If residual is lower than tollerance, then loop can end early
             if relative_residual(self.A, x, self.b) <= self.tol:
-                print(f"Gauss-Seidel reached convergence after {k+1} iterations!")
+                print(
+                    success_message(
+                        f"Gauss-Seidel reached convergence after {k+1} iterations!"
+                    )
+                )
                 return x
 
             # Computing new solution
             # L x_k+1 = b - U x_k
             solver = LowerTriangularSolver(L, self.b - U @ x)
-            x = solver.solve()
+            x = solver.solve(print_time=False)
 
         # Max number of iteration was reached without convergence
         print(

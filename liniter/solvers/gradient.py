@@ -1,5 +1,5 @@
 from .base import IterativeSolver
-from ..utils import is_symmetric, is_positive_definite, relative_residual
+from ..utils import is_symmetric, is_positive_definite, error_message, success_message
 import numpy as np
 
 
@@ -8,11 +8,15 @@ class GradientSolver(IterativeSolver):
         super()._check_matrix()
         # Check if matrix is symmetric
         if not is_symmetric(self.A):
-            raise ValueError("Matrix A is not symmetric, Gradient method failed.")
+            raise ValueError(
+                error_message("Matrix A is not symmetric, Gradient method failed.")
+            )
         # Check if matrix is positive definite
         if not is_positive_definite(self.A):
             raise ValueError(
-                "Matrix A is not positive-definite, Gradient method failed."
+                error_message(
+                    "Matrix A is not positive-definite, Gradient method failed."
+                )
             )
 
     def _solve(self):
@@ -24,7 +28,11 @@ class GradientSolver(IterativeSolver):
             # Checking if error is below threshold
             if np.linalg.norm(r) / np.linalg.norm(self.b) <= self.tol:
                 # Method has converged, return solution
-                print(f"Gradient reached convergence after {k+1} iterations!")
+                print(
+                    success_message(
+                        f"Gradient reached convergence after {k+1} iterations!"
+                    )
+                )
                 return x
 
             # Computing learning rate

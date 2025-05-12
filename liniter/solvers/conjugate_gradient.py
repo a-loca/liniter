@@ -1,5 +1,5 @@
 from .gradient import GradientSolver
-from ..utils import is_symmetric, is_positive_definite
+from ..utils import success_message
 import numpy as np
 
 
@@ -18,7 +18,11 @@ class ConjugateGradientSolver(GradientSolver):
             # Checking if error is below threshold
             if np.linalg.norm(r) / np.linalg.norm(self.b) <= self.tol:
                 # Method has converged, return solution
-                print(f"Conjugate Gradient reached convergence after {k+1} iterations!")
+                print(
+                    success_message(
+                        f"Conjugate Gradient reached convergence after {k+1} iterations!"
+                    )
+                )
                 return x
 
             ap_t = ap.T

@@ -95,10 +95,10 @@ def main():
     print(f"Starting solvers with tollerance={args.tol} and max_iter={args.max_iter}")
 
     for solver in solvers_list:
-        print("===================================================")
-        print(f"Running {solver.__class__.__name__}...")
+        print("\n===================================================\n")
+        print(f"Running \033[1m{solver.__class__.__name__}\033[0m...")
         sol = solver.solve()
-        print(f"Error: {utils.relative_error(x_exact=x, x_approx=sol)}")
+        print(f"Relative error: {utils.relative_error(x_exact=x, x_approx=sol)}")
 
 
 if __name__ == "__main__":
