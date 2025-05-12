@@ -58,12 +58,13 @@ def main():
     # Otherwise, run all solvers
     args = parser.parse_args()
 
-    if not (
-        args.jacobi or args.gauss_seidel or args.gradient or args.conjugate_gradient
-    ):
+    if args.all:
         args.all = True
     else:
-        args.all = False
+        # Altrimenti attiva all solo se nessun metodo specificato
+        args.all = not (
+            args.jacobi or args.gauss_seidel or args.gradient or args.conjugate_gradient
+        )
 
     # Load the matrix A from the provided file
     A = utils.load_custom_mtx(args.A)
@@ -92,13 +93,17 @@ def main():
             solvers.ConjugateGradientSolver(A, b, max_iter=args.max_iter, tol=args.tol)
         )
 
-    print(f"Starting solvers with tollerance={args.tol} and max_iter={args.max_iter}")
+    print(f"\nStarting solvers:")
+    print(f"\tMaximum iterations: {args.max_iter}")
+    print(f"\tTollerance: {args.tol}")
+    print(f"\tMatrix size: {A.shape[0]}x{A.shape[1]}")
 
     for solver in solvers_list:
         print("\n===================================================\n")
-        print(f"Running \033[1m{solver.__class__.__name__}\033[0m...")
-        sol = solver.solve()
+        print(f"Running \033[1m{solver.__class__.__name__}\033[0m...\n")
+        sol, time = solver.solve()
         print(f"Relative error: {utils.relative_error(x_exact=x, x_approx=sol)}")
+        print(f"Elapsed time (s): {time:.6f}")
 
 
 if __name__ == "__main__":

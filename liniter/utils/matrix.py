@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.sparse as sp
 
+def is_sparse(A):
+    return isinstance(A, sp.csr_matrix)
 
 def is_square(A):
     return A.shape[0] == A.shape[1]
@@ -8,7 +10,6 @@ def is_square(A):
 
 def is_vector_compatible(A, b):
     return A.shape[0] == b.shape[0]
-
 
 def is_symmetric(A, rtol=1e-5, atol=1e-8):
     # Check if A and A transposed are equal
