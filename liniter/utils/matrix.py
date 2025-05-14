@@ -7,7 +7,6 @@ def is_sparse(A):
 def is_square(A):
     return A.shape[0] == A.shape[1]
 
-
 def is_vector_compatible(A, b):
     return A.shape[0] == b.shape[0]
 

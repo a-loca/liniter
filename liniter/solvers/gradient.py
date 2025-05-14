@@ -28,7 +28,7 @@ class GradientSolver(IterativeSolver):
             # Checking if error is below threshold
             if np.linalg.norm(r) / np.linalg.norm(self.b) <= self.tol:
                 # Method has converged, return solution
-                print(
+                self.verbose and print(
                     success_message(
                         f"Gradient reached convergence after {k+1} iterations!"
                     )
@@ -43,7 +43,7 @@ class GradientSolver(IterativeSolver):
             x = x + alpha * r
 
         # Method has not converged since for loop has ended
-        print(
+        self.verbose and print(
             f"Gradient could not reach convergence after {self.max_iter} iterations, ending execution."
         )
         return x

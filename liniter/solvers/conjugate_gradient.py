@@ -18,7 +18,7 @@ class ConjugateGradientSolver(GradientSolver):
             # Checking if error is below threshold
             if np.linalg.norm(r) / np.linalg.norm(self.b) <= self.tol:
                 # Method has converged, return solution
-                print(
+                self.verbose and print(
                     success_message(
                         f"Conjugate Gradient reached convergence after {k+1} iterations!"
                     )
@@ -28,7 +28,7 @@ class ConjugateGradientSolver(GradientSolver):
             ap_t = ap.T
             beta = (ap_t @ r) / (ap_t @ p)
             p = r - beta * p
-        print(
+        self.verbose and print(
             f"Conjugate Gradient could not reach convergence after {self.max_iter} iterations, ending execution."
         )
         return x

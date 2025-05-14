@@ -6,9 +6,10 @@ from ..utils import error_message
 
 class Solver(ABC):
 
-    def __init__(self, A, b):
+    def __init__(self, A, b, verbose=True):
         self.A = A
         self.b = b
+        self.verbose = verbose
 
     def _check_matrix(self):
         if not is_sparse(self.A):
@@ -40,10 +41,10 @@ class Solver(ABC):
 
 class IterativeSolver(Solver):
 
-    def __init__(self, A, b, max_iter=20000, tol=1e-5):
+    def __init__(self, A, b, verbose=True, max_iter=20000, tol=1e-4):
         self.max_iter = max_iter
         self.tol = tol
-        super().__init__(A, b)
+        super().__init__(A, b, verbose)
 
     @abstractmethod
     def _solve(self):

@@ -24,7 +24,7 @@ class GaussSeidelSolver(IterativeSolver):
             )
         # Check if matrix is diagonally dominant
         if not is_diagonally_dominant(self.A):
-            print(
+            self.verbose and print(
                 warning_message(
                     "WARNING: matrix is not diagonally dominant, Gauss-Seidel may fail."
                 )
@@ -45,7 +45,7 @@ class GaussSeidelSolver(IterativeSolver):
         for k in range(self.max_iter):
             # If residual is lower than tollerance, then loop can end early
             if relative_residual(self.A, x, self.b) <= self.tol:
-                print(
+                self.verbose and print(
                     success_message(
                         f"Gauss-Seidel reached convergence after {k+1} iterations!"
                     )
@@ -58,7 +58,7 @@ class GaussSeidelSolver(IterativeSolver):
             x, _ = solver.solve()
 
         # Max number of iteration was reached without convergence
-        print(
+        self.verbose and print(
             f"Gauss-Seidel could not reach convergence after {self.max_iter} iterations, ending execution."
         )
         return x

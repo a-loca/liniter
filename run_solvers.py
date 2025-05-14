@@ -53,6 +53,12 @@ def main():
         default=False,
         help="Run Conjugate Gradient solver.",
     )
+    parser.add_argument(
+        "--mute",
+        action="store_true",
+        default=False,
+        help="Turn off verbose option for solvers: warnings and ",
+    )
 
     # If user specifies a solver, then all is False
     # Otherwise, run all solvers
@@ -78,19 +84,27 @@ def main():
     solvers_list = []
     if args.all or args.jacobi:
         solvers_list.append(
-            solvers.JacobiSolver(A, b, max_iter=args.max_iter, tol=args.tol)
+            solvers.JacobiSolver(
+                A, b, max_iter=args.max_iter, tol=args.tol, verbose=not args.mute
+            )
         )
     if args.all or args.gauss_seidel:
         solvers_list.append(
-            solvers.GaussSeidelSolver(A, b, max_iter=args.max_iter, tol=args.tol)
+            solvers.GaussSeidelSolver(
+                A, b, max_iter=args.max_iter, tol=args.tol, verbose=not args.mute
+            )
         )
     if args.all or args.gradient:
         solvers_list.append(
-            solvers.GradientSolver(A, b, max_iter=args.max_iter, tol=args.tol)
+            solvers.GradientSolver(
+                A, b, max_iter=args.max_iter, tol=args.tol, verbose=not args.mute
+            )
         )
     if args.all or args.conjugate_gradient:
         solvers_list.append(
-            solvers.ConjugateGradientSolver(A, b, max_iter=args.max_iter, tol=args.tol)
+            solvers.ConjugateGradientSolver(
+                A, b, max_iter=args.max_iter, tol=args.tol, verbose=not args.mute
+            )
         )
 
     print(f"\nStarting solvers:")

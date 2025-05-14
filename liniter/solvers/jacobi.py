@@ -17,6 +17,7 @@ class JacobiSolver(IterativeSolver):
         super()._check_matrix()
         # Check if diagonal has no null elements
         if not is_diagonal_non_zero(self.A):
+
             raise ValueError(
                 error_message(
                     "Matrix A has at least one zero on the diagonal. Jacobi failed."
@@ -24,7 +25,7 @@ class JacobiSolver(IterativeSolver):
             )
         # Check if matrix is diagonally dominant
         if not is_diagonally_dominant(self.A):
-            print(
+            self.verbose and print(
                 warning_message(
                     "WARNING: matrix is not diagonally dominant, Jacobi may fail."
                 )
@@ -48,7 +49,7 @@ class JacobiSolver(IterativeSolver):
         for k in range(self.max_iter):
             # If residual is lower than tollerance, then loop can end early
             if relative_residual(self.A, x, self.b) <= self.tol:
-                print(
+                self.verbose and print(
                     success_message(
                         f"Jacobi reached convergence after {k+1} iterations!"
                     )
@@ -60,7 +61,7 @@ class JacobiSolver(IterativeSolver):
             x = D_inv @ (LU @ x + self.b)
 
         # Max number of iteration was reached without convergence
-        print(
+        self.verbose and print(
             f"Jacobi could not reach convergence after {self.max_iter} iterations, ending execution."
         )
         return x
