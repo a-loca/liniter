@@ -2,9 +2,9 @@ import liniter.solvers as solvers
 import liniter.utils as utils
 import numpy as np
 import scipy.sparse as sp
-import sys
+# import sys
 
-np.set_printoptions(threshold=sys.maxsize)
+# np.set_printoptions(threshold=sys.maxsize)
 
 A = sp.csr_matrix(np.array([[0, -1, 0], [-1, 3, -1], [0, -1, 4]]))
 # x = np.array([1, 1, 1])

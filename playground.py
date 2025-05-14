@@ -1,5 +1,5 @@
 ########################################################################
-# Playground for testing and experimenting with the linear solver library
+# Playground for testing and experimenting with Liniter
 ########################################################################
 
 # ==============================================================
@@ -54,8 +54,8 @@ print("Matrix is diagonally dominant:", utils.is_diagonally_dominant(A))
 # - ConjugateGradientSolver
 # ==============================================================
 
-solver = solvers.JacobiSolver(A, b, max_iter=20000, tol=1e-4)
-solution, elapsed_time = solver.solve()
+solver = solvers.JacobiSolver(A, b, max_iter=20000, tol=1e-4, verbose=True)
+solution = solver.solve()
 
 # ==============================================================
 # OUTPUT
