@@ -115,9 +115,8 @@ def main():
     for solver in solvers_list:
         print("\n===================================================\n")
         print(f"Running \033[1m{solver.__class__.__name__}\033[0m...\n")
-        sol, time = solver.solve()
+        sol = solver.solve()
         print(f"Relative error: {utils.relative_error(x_exact=x, x_approx=sol)}")
-        print(f"Elapsed time (s): {time:.6f}")
 
 
 if __name__ == "__main__":

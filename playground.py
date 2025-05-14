@@ -11,7 +11,7 @@ import scipy.sparse as sp
 import liniter.solvers as solvers
 import liniter.utils as utils
 
-# Remove below comments to get the full printed outputs for
+# Remove comments below to get the full printed outputs for
 # vectors and matrices
 # import sys
 # np.set_printoptions(threshold=sys.maxsize)
@@ -67,4 +67,3 @@ solution, elapsed_time = solver.solve()
 
 print(f"Solution: {solution}")
 print(f"Relative error: {utils.relative_error(x_exact=x, x_approx=solution)}")
-print(f"Elapsed time (s): {elapsed_time:.6f}")

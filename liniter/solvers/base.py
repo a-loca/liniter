@@ -28,16 +28,20 @@ class Solver(ABC):
     def solve(self):
         # Check if matrix is in the correct format
         self._check_matrix()
-        # Starting time of the method
-        time_start = time.time()
-        # Solve linear system
-        sol = self._solve()
-        # Ending time
-        time_end = time.time()
-        # Find elapsed time
-        tot_time = time_end - time_start
-        return sol, tot_time
+        if self.verbose:
+            # Starting time of the method
+            time_start = time.time()
+            # Solve linear system
+            sol = self._solve()
+            # Ending time
+            time_end = time.time()
+            # Find elapsed time
+            tot_time = time_end - time_start
+            print(f"Elapsed time (s): {tot_time:.6f}")
+        else:
+            sol = self._solve()
 
+        return sol
 
 class IterativeSolver(Solver):
 

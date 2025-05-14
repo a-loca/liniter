@@ -54,8 +54,8 @@ class GaussSeidelSolver(IterativeSolver):
 
             # Computing new solution
             # L x_k+1 = b - U x_k
-            solver = LowerTriangularSolver(L, self.b - U @ x)
-            x, _ = solver.solve()
+            solver = LowerTriangularSolver(L, self.b - U @ x, verbose=False)
+            x = solver.solve()
 
         # Max number of iteration was reached without convergence
         self.verbose and print(
