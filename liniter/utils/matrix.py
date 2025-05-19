@@ -1,16 +1,60 @@
 import numpy as np
 import scipy.sparse as sp
 
+
 def is_sparse(A):
+    """
+    Checks if matrix is in Compressed Row Format
+
+    Args:
+        A (scipy.sparse matrix): matrix to check
+
+    Returns:
+        bool: True if matrix is in Compressed Row Format, False otherwise
+    """
+
     return isinstance(A, sp.csr_matrix)
 
+
 def is_square(A):
+    """
+    Checks if matrix is square
+
+    Args:
+        A (scipy.sparse matrix): matrix to check
+
+    Returns:
+        bool: True if matrix is square, False otherwise
+    """
     return A.shape[0] == A.shape[1]
 
+
 def is_vector_compatible(A, b):
+    """
+    Checks if matrix A and vector b are compatible by comparing matrix A's rows with vector b's length.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check
+        b (numpy array): vector to check compatibility with A
+
+    Returns:
+        bool: True if matrix A and vector b are compatible, False otherwise
+    """
     return A.shape[0] == b.shape[0]
 
+
 def is_symmetric(A, rtol=1e-5, atol=1e-8):
+    """
+    Checks if matrix A is symmetric by comparing A with its transpose. The comparison is calculated within a tollerance given by |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check for symmetry
+        rtol (float): relative tollerance
+        atol (float): absolute tollerance
+
+    Returns:
+        bool: True if matrix A is symmetric, False otherwise
+    """
     # Check if A and A transposed are equal
     diff = A - A.transpose()
 
@@ -25,12 +69,34 @@ def is_symmetric(A, rtol=1e-5, atol=1e-8):
 
 
 def is_triangular(A, lower=True, rtol=1e-5, atol=1e-8):
+    """
+    Checks if matrix A is triangular by comparing A with its lower or upper triangular part. The comparison is calculated within a tollerance given by |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check for symmetry
+        lower (bool): if True, check if A is lower triangular, otherwis check if upper triangular
+        rtol (float): relative tollerance
+        atol (float): absolute tollerance
+
+    Returns:
+        bool: True if matrix A is triangular (lower or upper), False otherwise
+    """
+
     diff = A - sp.tril(A) if lower else sp.triu(A)
     diff_coo = diff.tocoo()
     return np.allclose(diff_coo.data, 0, rtol=rtol, atol=atol)
 
 
 def is_diagonally_dominant(A):
+    """
+    Check if matrix A is diagonally dominant by checking if the absolute values of the diagonal elements are greater than the sum of the absolute values of the other elements in the same row.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check for diagonal dominance
+
+    Returns:
+        bool: True if matrix A is diagonally dominant, False otherwise
+    """
     # Absolute values of A
     abs_A = abs(A)
 
@@ -46,14 +112,37 @@ def is_diagonally_dominant(A):
 
 
 def is_diagonal_non_zero(A, rtol=1e-5, atol=1e-8):
+    """
+    Check if the diagonal of matrix A is non-zero. The comparison is calculated within a tollerance given by |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check for non-zero diagonal elements
+        rtol (float): relative tollerance
+        atol (float): absolute tollerance
+
+    Returns:
+        bool: True if diagonal elements of A are non-zero, False otherwise.
+
+    """
+
     # Check if diagonal vector and zero vector are equal within tollerance
     return np.all(~np.isclose(A.diagonal(), 0, rtol=rtol, atol=atol))
 
 
 def is_positive_definite(A):
-    # Matrix is positive-definite if symmetric and all its
-    # eigenvalues are positive, by getting only the smallest eigenvalue
-    # and checking if it is positive
+    """
+    Checks if matrix A is positive-definite, meaning that it is symmetric and all its eigenvalues are positive.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check for positive-definiteness
+
+    Returns:
+        bool: True if matrix A is positive-definite, False otherwise
+    """
+
+    # We check positive-definiteness by checking symmetry
+    # and getting only the smallest eigenvalue and checking if it is positive,
+    # meaning that all the other ones are also positive
     return (
         is_symmetric(A)
         and sp.linalg.eigsh(A, k=1, which="SA", return_eigenvectors=False) > 0

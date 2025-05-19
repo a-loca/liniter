@@ -2,6 +2,21 @@ import argparse
 import liniter.solvers as solvers
 import liniter.utils as utils
 import numpy as np
+import matplotlib.pyplot as plt
+
+plt.style.use(
+    "https://github.com/dhaitz/matplotlib-stylesheets/raw/master/pitayasmoothie-light.mplstyle"
+)
+
+
+def visualize_matrix(A, filename):
+    plt.figure(figsize=(12, 12))
+    plt.spy(A, markersize=0.05)
+    plt.xlabel("Columns")
+    plt.ylabel("Rows")
+    plt.tight_layout()
+    plt.savefig(filename, dpi=300)
+    print(f"Matrix visualization saved at {filename}")
 
 
 def main():
@@ -57,7 +72,13 @@ def main():
         "--mute",
         action="store_true",
         default=False,
-        help="Turn off verbose option for solvers: warnings and ",
+        help="Turn off verbose option for solvers: logs will not be printed.",
+    )
+    parser.add_argument(
+        "--visualize",
+        action="store_true",
+        default=False,
+        help="Visualize the matrix A.",
     )
 
     # If user specifies a solver, then all is False
@@ -74,6 +95,8 @@ def main():
 
     # Load the matrix A from the provided file
     A = utils.load_custom_mtx(args.A)
+    if args.visualize:
+        visualize_matrix(A, args.A.replace(".mtx", ".png"))
 
     # Create solution vector x
     x = np.ones(A.shape[0])
