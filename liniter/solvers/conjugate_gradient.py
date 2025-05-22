@@ -7,12 +7,17 @@ class ConjugateGradientSolver(GradientSolver):
 
     def _solve(self):
         x = np.zeros(self.A.shape[0])
+        # First residual
         r = self.b - self.A @ x
+        # First descent direction
         p = r
         for k in range(self.max_iter):
+            # Finding learning rate
             ap = self.A @ p
             alpha = (p.T @ r) / (p.T @ ap)
+            # Updating solution
             x = x + alpha * p
+            # Updating residual
             r = r - alpha * ap
 
             # Checking if error is below threshold
@@ -25,6 +30,7 @@ class ConjugateGradientSolver(GradientSolver):
                 )
                 return x
 
+            # Updating descent direction
             ap_t = ap.T
             beta = (ap_t @ r) / (ap_t @ p)
             p = r - beta * p
