@@ -55,6 +55,11 @@ def is_symmetric(A, rtol=1e-5, atol=1e-8):
     Returns:
         bool: True if matrix A is symmetric, False otherwise
     """
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
+    if not is_square(A):
+        raise ValueError("Matrix A must be square to check for symmetry.")
+
     # Check if A and A transposed are equal
     diff = A - A.transpose()
 
@@ -81,6 +86,10 @@ def is_triangular(A, lower=True, rtol=1e-5, atol=1e-8):
     Returns:
         bool: True if matrix A is triangular (lower or upper), False otherwise
     """
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
+    if not is_square(A):
+        raise ValueError("Matrix A must be square to check for triangularity check.")
 
     diff = A - sp.tril(A) if lower else sp.triu(A)
     diff_coo = diff.tocoo()
@@ -97,6 +106,12 @@ def is_diagonally_dominant(A):
     Returns:
         bool: True if matrix A is diagonally dominant, False otherwise
     """
+
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
+    if not is_square(A):
+        raise ValueError("Matrix A must be square for diagonal dominance check.")
+
     # Absolute values of A
     abs_A = abs(A)
 
@@ -124,6 +139,9 @@ def is_diagonal_non_zero(A, rtol=1e-5, atol=1e-8):
         bool: True if diagonal elements of A are non-zero, False otherwise.
 
     """
+    
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
 
     # Check if diagonal vector and zero vector are equal within tollerance
     return np.all(~np.isclose(A.diagonal(), 0, rtol=rtol, atol=atol))
@@ -139,6 +157,8 @@ def is_positive_definite(A):
     Returns:
         bool: True if matrix A is positive-definite, False otherwise
     """
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
 
     # We check positive-definiteness by checking symmetry
     # and getting only the smallest eigenvalue and checking if it is positive,
@@ -147,3 +167,38 @@ def is_positive_definite(A):
         is_symmetric(A)
         and sp.linalg.eigsh(A, k=1, which="SA", return_eigenvectors=False) > 0
     )
+
+
+def condition_number(A):
+    """
+    Computes the condition number of a sparse matrix A. A needs to be positive-definite.
+    The condition number is estimated as the ratio of largest and smallest eigenvalues of A.
+    Args:
+        A (scipy.sparse matrix): matrix to compute condition number on
+
+    Returns:
+        float: condition number of matrix A
+    """
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
+    if not is_positive_definite(A):
+        raise ValueError(
+            "Matrix A needs to be positive-definite to estimate condition number."
+        )
+
+    eig_max = sp.linalg.eigsh(A, k=1, which="LM", return_eigenvectors=False)[0]
+    eig_min = sp.linalg.eigsh(A, k=1, which="SM", return_eigenvectors=False)[0]
+    return eig_max / eig_min
+
+def sparsity(A):
+    """
+    Computes the percentage of non-zero elements in the sparse matrix A by dividing number  of non-zero elements by the total number of elements in the matrix.
+    Args:
+        A (scipy.sparse matrix): sparse matrix to compute sparsity percentage on
+    Returns:
+        float: sparsity percentage of A
+    """
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
+
+    return A.nnz / (A.shape[0] * A.shape[1]) * 100

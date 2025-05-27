@@ -3,6 +3,7 @@ import liniter.solvers as solvers
 import liniter.utils as utils
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.sparse as sp
 
 plt.style.use(
     "https://github.com/dhaitz/matplotlib-stylesheets/raw/master/pitayasmoothie-light.mplstyle"
@@ -130,10 +131,12 @@ def main():
             )
         )
 
-    print(f"\nStarting solvers:")
+    print(f"\nSettings and matrix properties:")
     print(f"\tMaximum iterations: {args.max_iter}")
     print(f"\tTollerance: {args.tol}")
     print(f"\tMatrix size: {A.shape[0]}x{A.shape[1]}")
+    print(f"\tMatrix condition number: {utils.condition_number(A):.3f}")
+    print(f"\tMatrix sparsity percentage: {utils.sparsity(A):.2f}%")
 
     for solver in solvers_list:
         print("\n===================================================\n")
