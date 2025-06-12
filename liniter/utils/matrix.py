@@ -96,7 +96,7 @@ def is_triangular(A, lower=True, rtol=1e-5, atol=1e-8):
     return np.allclose(diff_coo.data, 0, rtol=rtol, atol=atol)
 
 
-def is_diagonally_dominant(A):
+def is_diagonally_dominant(A, verbose=False):
     """
     Check if matrix A is diagonally dominant by checking if the absolute values of the diagonal elements are greater than the sum of the absolute values of the other elements in the same row.
 
@@ -121,9 +121,42 @@ def is_diagonally_dominant(A):
     # Sum of elements on each row
     row_sums = abs_A.sum(axis=1).A1
 
-    # Checking if diagonal element is bigger than the sum of the rest on the row
+    # Removing diagonal from sum of rows
     S = row_sums - D
+
+    # All elements of the diagonal must be greater than respective row sum
     return np.all(D > S)
+
+
+def get_diagonal_dominance(A):
+    """
+    Gets the number of diagonally dominant rows in matrix A. A row is considered diagonally dominant if the absolute value of the diagonal element is greater than the sum of the absolute values of the other elements in the same row.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check for diagonal dominance
+
+    Returns:
+        int: number of diagonally dominant rows in matrix A
+    """
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
+    if not is_square(A):
+        raise ValueError("Matrix A must be square for diagonal dominance check.")
+
+    # Absolute values of A
+    abs_A = abs(A)
+
+    # Getting diagonal of A
+    D = abs_A.diagonal()
+
+    # Sum of elements on each row
+    row_sums = abs_A.sum(axis=1).A1
+
+    # Removing diagonal from sum of rows
+    S = row_sums - D
+
+    # All elements of the diagonal must be greater than respective row sum
+    return sum(D > S)
 
 
 def is_diagonal_non_zero(A, rtol=1e-5, atol=1e-8):
@@ -139,7 +172,7 @@ def is_diagonal_non_zero(A, rtol=1e-5, atol=1e-8):
         bool: True if diagonal elements of A are non-zero, False otherwise.
 
     """
-    
+
     if not is_sparse(A):
         raise ValueError("Matrix A needs to be sparse.")
 
@@ -189,6 +222,7 @@ def condition_number(A):
     eig_max = sp.linalg.eigsh(A, k=1, which="LM", return_eigenvectors=False)[0]
     eig_min = sp.linalg.eigsh(A, k=1, which="SM", return_eigenvectors=False)[0]
     return eig_max / eig_min
+
 
 def sparsity(A):
     """
