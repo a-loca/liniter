@@ -60,9 +60,10 @@ solution = solver.solve()
 # ==============================================================
 # OUTPUT
 # The solver methods already output the number of iterations taken
-# to solve the system. Additionally, one can decide to save time elapsed
-# and compute the relative error with regards to the provided exact solution
-# to the system
+# to solve the system. Additionally, one can decide to compute the 
+# relative error with regards to the provided exact solution to the 
+# system. Number of iterations and time elapsed are also printed
+# if verbose is set to True
 # ==============================================================
 
 print(f"Solution: {solution}")

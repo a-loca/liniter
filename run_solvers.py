@@ -135,10 +135,10 @@ def main():
     print(f"\tMaximum iterations: {args.max_iter}")
     print(f"\tTollerance: {args.tol}")
     print(f"\tMatrix size: {A.shape[0]}x{A.shape[1]}")
-    print(f"\tMatrix condition number: {utils.condition_number(A):.3f}")
+    print(f"\tMatrix condition number: {utils.condition_number(A):.2f}")
     print(f"\tMatrix sparsity percentage: {utils.sparsity(A):.2f}%")
     print(
-        f"\tDiagonal dominance percentage: {utils.get_diagonal_dominance(A) / A.shape[0]:.2f}%"
+        f"\tDiagonal dominance percentage: {utils.get_diagonal_dominance(A) / A.shape[0] * 100:.2f}%"
     )
 
     for solver in solvers_list:

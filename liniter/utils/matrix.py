@@ -31,7 +31,8 @@ def is_square(A):
 
 def is_vector_compatible(A, b):
     """
-    Checks if matrix A and vector b are compatible by comparing matrix A's rows with vector b's length.
+    Checks if matrix A and vector b are compatible by comparing matrix A's 
+    rows with vector b's length.
 
     Args:
         A (scipy.sparse matrix): matrix to check
@@ -45,7 +46,9 @@ def is_vector_compatible(A, b):
 
 def is_symmetric(A, rtol=1e-5, atol=1e-8):
     """
-    Checks if matrix A is symmetric by comparing A with its transpose. The comparison is calculated within a tollerance given by |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
+    Checks if matrix A is symmetric by comparing A with its transpose. 
+    The comparison is calculated within a tollerance given by 
+    |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
 
     Args:
         A (scipy.sparse matrix): matrix to check for symmetry
@@ -75,11 +78,14 @@ def is_symmetric(A, rtol=1e-5, atol=1e-8):
 
 def is_triangular(A, lower=True, rtol=1e-5, atol=1e-8):
     """
-    Checks if matrix A is triangular by comparing A with its lower or upper triangular part. The comparison is calculated within a tollerance given by |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
+    Checks if matrix A is triangular by comparing A with its lower or upper
+    triangular part. The comparison is calculated within a tollerance given
+    by |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
 
     Args:
         A (scipy.sparse matrix): matrix to check for symmetry
-        lower (bool): if True, check if A is lower triangular, otherwis check if upper triangular
+        lower (bool): if True, check if A is lower triangular, 
+                        otherwise check if upper triangular
         rtol (float): relative tollerance
         atol (float): absolute tollerance
 
@@ -96,9 +102,41 @@ def is_triangular(A, lower=True, rtol=1e-5, atol=1e-8):
     return np.allclose(diff_coo.data, 0, rtol=rtol, atol=atol)
 
 
-def is_diagonally_dominant(A, verbose=False):
+def _diagonal_dominance_check(A):
     """
-    Check if matrix A is diagonally dominant by checking if the absolute values of the diagonal elements are greater than the sum of the absolute values of the other elements in the same row.
+    Computes a boolean array indicating which rows of A are diagonally dominant.
+
+    Args:
+        A (scipy.sparse matrix): matrix to check
+
+    Returns:
+        np.ndarray: boolean array where True indicates a diagonally dominant row
+    """
+    if not is_sparse(A):
+        raise ValueError("Matrix A needs to be sparse.")
+    if not is_square(A):
+        raise ValueError("Matrix A must be square for diagonal dominance check.")
+
+    abs_A = abs(A)
+    # Get the diagonal elements of the absolute of A
+    D = abs_A.diagonal()
+    
+    # Calculate the sum for each row of A
+    row_sums = abs_A.sum(axis=1).A1
+    
+    # Subtract the diagonal elements from their respective row sums
+    S = row_sums - D
+    
+    # Check if the diagonal elements are greater than the sum
+    # of the other elements
+    return D > S
+
+
+def is_diagonally_dominant(A):
+    """
+    Check if matrix A is diagonally dominant by checking if the absolute values 
+    of the diagonal elements are greater than the sum of the absolute values of
+    the other elements in the same row.
 
     Args:
         A (scipy.sparse matrix): matrix to check for diagonal dominance
@@ -106,31 +144,15 @@ def is_diagonally_dominant(A, verbose=False):
     Returns:
         bool: True if matrix A is diagonally dominant, False otherwise
     """
-
-    if not is_sparse(A):
-        raise ValueError("Matrix A needs to be sparse.")
-    if not is_square(A):
-        raise ValueError("Matrix A must be square for diagonal dominance check.")
-
-    # Absolute values of A
-    abs_A = abs(A)
-
-    # Getting diagonal of A
-    D = abs_A.diagonal()
-
-    # Sum of elements on each row
-    row_sums = abs_A.sum(axis=1).A1
-
-    # Removing diagonal from sum of rows
-    S = row_sums - D
-
-    # All elements of the diagonal must be greater than respective row sum
-    return np.all(D > S)
+    return np.all(_diagonal_dominance_check(A))
 
 
 def get_diagonal_dominance(A):
     """
-    Gets the number of diagonally dominant rows in matrix A. A row is considered diagonally dominant if the absolute value of the diagonal element is greater than the sum of the absolute values of the other elements in the same row.
+    Gets the number of diagonally dominant rows in matrix A. A row is 
+    considered diagonally dominant if the absolute value of the diagonal 
+    element is greater than the sum of the absolute values of the other 
+    elements in the same row.
 
     Args:
         A (scipy.sparse matrix): matrix to check for diagonal dominance
@@ -138,37 +160,21 @@ def get_diagonal_dominance(A):
     Returns:
         int: number of diagonally dominant rows in matrix A
     """
-    if not is_sparse(A):
-        raise ValueError("Matrix A needs to be sparse.")
-    if not is_square(A):
-        raise ValueError("Matrix A must be square for diagonal dominance check.")
-
-    # Absolute values of A
-    abs_A = abs(A)
-
-    # Getting diagonal of A
-    D = abs_A.diagonal()
-
-    # Sum of elements on each row
-    row_sums = abs_A.sum(axis=1).A1
-
-    # Removing diagonal from sum of rows
-    S = row_sums - D
-
-    # All elements of the diagonal must be greater than respective row sum
-    return sum(D > S)
+    return np.sum(_diagonal_dominance_check(A))
 
 
 def is_diagonal_non_zero(A, rtol=1e-5, atol=1e-8):
     """
-    Check if the diagonal of matrix A is non-zero. The comparison is calculated within a tollerance given by |a − b| ≤ atol + rtol * |b|, to avoid floating point errors.
+    Check if the diagonal of matrix A is non-zero. The comparison is calculated
+    within a tollerance given by |a − b| ≤ atol + rtol * |b|, 
+    to avoid floating point errors.
 
     Args:
         A (scipy.sparse matrix): matrix to check for non-zero diagonal elements
         rtol (float): relative tollerance
         atol (float): absolute tollerance
 
-    Returns:
+    Returns:s
         bool: True if diagonal elements of A are non-zero, False otherwise.
 
     """
@@ -182,7 +188,8 @@ def is_diagonal_non_zero(A, rtol=1e-5, atol=1e-8):
 
 def is_positive_definite(A):
     """
-    Checks if matrix A is positive-definite, meaning that it is symmetric and all its eigenvalues are positive.
+    Checks if matrix A is positive-definite, meaning that it is symmetric and
+    all its eigenvalues are positive.
 
     Args:
         A (scipy.sparse matrix): matrix to check for positive-definiteness
